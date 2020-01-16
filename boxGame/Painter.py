@@ -59,7 +59,7 @@ class Painter():
         width = self.width
         height = self.height
         step = self.step
-        root.title("欢迎使作推箱子游戏")
+        root.title("欢迎使用推箱子游戏")
         root.geometry(str(width*step) + "x" + str(height*step+30))    # 设置大小
         root.geometry("+400+200")   # 设置上左边距
         root.resizable(0, 0)    # 禁止改变大小
@@ -86,12 +86,15 @@ class Painter():
         # fm2 = tkinter.Frame(root, background="blue")
         fm2 = tkinter.Frame(root)
         tkinter.Button(fm2, text='帮助', command=self.openHelp).grid(row = 1, column = 1)
-        tkinter.Label(fm2, text="       ").grid(row = 1, column = 2)
-        tkinter.Button(fm2, text='上一关', command=self.prevGate).grid(row = 1, column = 3)
-        tkinter.Button(fm2, text='重玩一次', command=self.reStart).grid(row = 1, column = 4)
-        tkinter.Button(fm2, text='下一关', command=self.nextGate).grid(row = 1, column = 5)
-        tkinter.Label(fm2, text="       ").grid(row = 1, column = 6)
-        tkinter.Button(fm2, text='退出', command=root.quit).grid(row = 1, column = 7)
+        tkinter.Label(fm2, text=" ").grid(row = 1, column = 2)
+        tkinter.Button(fm2, text='重玩一次', command=self.reStart).grid(row = 1, column = 3)
+        self.gateLabel = tkinter.Label(fm2, text=" 第"+str(self.mapIndex + 1)+"关 ", background="SkyBlue")
+        self.gateLabel.grid(row = 1, column = 4)
+        tkinter.Button(fm2, text='上一关', command=self.prevGate).grid(row = 1, column = 5) 
+        tkinter.Label(fm2, text=" ").grid(row = 1, column = 6)
+        tkinter.Button(fm2, text='下一关', command=self.nextGate).grid(row = 1, column = 7)
+        tkinter.Label(fm2, text="  ").grid(row = 1, column = 8)
+        tkinter.Button(fm2, text='退出', command=root.quit).grid(row = 1, column = 9)
         fm2.pack()
 
     def clearCV(self):
@@ -327,10 +330,16 @@ class Painter():
             self.person_x = ux
 
     def startPlay(self):
+        # 播放声音
+        soundname = mpath+'\\bgm.mp3'
+        self.playSound(soundname)
         self.root.bind("<Key>", self.move)
         self.root.mainloop()
 
     def reStart(self):
+        # 播放声音
+        soundname = mpath+'\\bgm.mp3'
+        painter.playSound(soundname)
         self.map = getMap(self.mapIndex)
         self.reDrawByMap()
 
@@ -344,6 +353,7 @@ class Painter():
         self.clearCV()
         self.setDataByMap()
         self.drawMap()
+        self.gateLabel["text"] = " 第"+str(self.mapIndex+1)+"关 "
 
     def prevGate(self):
         self.mapIndex = self.mapIndex-1 if (self.mapIndex-1) > 0 else 0
